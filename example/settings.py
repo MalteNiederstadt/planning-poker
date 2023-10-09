@@ -6,11 +6,11 @@ import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, '.env'))
+#load_dotenv(os.path.join(BASE_DIR, '/.env'))
 
 
-DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
-#DEBUG = True
+#DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -102,20 +102,21 @@ STATICFILES_FINDERS = (
 
 # Please note, that the in-memory layer should not be used in production.
 # Instead install and use the channels-redis layers backend.
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
-    }
-}
-
 # CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("localhost", 6379)],
-#         },
-#     },
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer'
+#     }
 # }
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 LOGIN_URL = 'admin:login'
 LOGOUT_URL = 'admin:logout'
 
