@@ -1,5 +1,5 @@
 BROWSER ?= xdg-open
-PYTHON_PACKAGE = planning_poker
+PYTHON_PACKAGE = planning_poker_jira
 TESTS_PACKAGE = tests
 
 .PHONY: clean clean-test clean-pyc clean-build docs help

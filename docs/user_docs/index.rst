@@ -6,5 +6,4 @@ User Documentation
    :caption: Contents
 
    configuration
-   roles
-   user_interface
+   how-to

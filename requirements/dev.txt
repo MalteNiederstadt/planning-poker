@@ -5,28 +5,26 @@
 #    pip-compile --output-file=dev.txt dev.in
 #
 
+wheel==0.41.0
+whitenoise==6.2.0
+Brotli==1.0.9
+channels_redis
+gunicorn==20.1.0
+psycopg2-binary==2.9.5
+dj-database-url==1.2.0
+python-dotenv==0.21.0
 alabaster==0.7.13
     # via sphinx
-asgiref==3.3.4
+asgiref==3.7.2
     # via
-    #   -r dev.in
     #   channels
-    #   daphne
     #   django
 astroid==2.15.6
     # via pylint
 attrs==23.1.0
-    # via
-    #   automat
-    #   pytest
-    #   service-identity
-    #   twisted
+    # via pytest
 autobahn==21.2.1
-    # via
-    #   -r tox.in
-    #   daphne
-automat==22.10.0
-    # via twisted
+    # via -r tox.in
 babel==2.12.1
     # via sphinx
 build==0.10.0
@@ -36,13 +34,11 @@ certifi==2023.7.22
 cffi==1.15.1
     # via cryptography
 channels==3.0.4
-    # via -r dev.in
+    # via planning-poker
 charset-normalizer==3.2.0
     # via requests
 click==8.1.6
     # via pip-tools
-constantly==15.1.0
-    # via twisted
 coverage==7.2.7
     # via
     #   -r tox.in
@@ -50,17 +46,20 @@ coverage==7.2.7
 cryptography==41.0.2
     # via
     #   autobahn
-    #   pyopenssl
-    #   service-identity
-daphne==3.0.2
-    # via channels
+    #   secretstorage
+defusedxml==0.7.1
+    # via jira
 dill==0.3.7
     # via pylint
 django==3.2.20
     # via
     #   -r dev.in
     #   channels
+    #   django-searchable-encrypted-fields
+    #   planning-poker
 django-channels-presence==1.0.0
+    # via planning-poker
+django-searchable-encrypted-fields==0.2.1
     # via -r dev.in
 docutils==0.18.1
     # via
@@ -69,30 +68,39 @@ docutils==0.18.1
 flake8==6.0.0
     # via -r dev.in
 hyperlink==21.0.0
-    # via
-    #   autobahn
-    #   twisted
+    # via autobahn
 idna==3.4
     # via
     #   hyperlink
     #   requests
-    #   twisted
 imagesize==1.4.1
     # via sphinx
 importlib-metadata==6.8.0
-    # via sphinx
-incremental==22.10.0
-    # via twisted
+    # via
+    #   keyring
+    #   sphinx
+importlib-resources==6.0.0
+    # via keyring
 iniconfig==2.0.0
     # via pytest
 isort==5.12.0
     # via
     #   -r dev.in
     #   pylint
+jaraco-classes==3.3.0
+    # via keyring
+jeepney==0.8.0
+    # via
+    #   keyring
+    #   secretstorage
 jinja2==3.1.2
     # via
     #   sphinx
     #   sphinx-js
+jira
+    # via -r tox.in
+keyring==24.2.0
+    # via jira
 lazy-object-proxy==1.9.0
     # via astroid
 markupsafe==2.0.1
@@ -103,6 +111,10 @@ mccabe==0.7.0
     # via
     #   flake8
     #   pylint
+more-itertools==10.0.0
+    # via jaraco-classes
+oauthlib==3.2.2
+    # via requests-oauthlib
 packaging==23.1
     # via
     #   build
@@ -112,22 +124,20 @@ parsimonious==0.10.0
     # via sphinx-js
 pip-tools==7.1.0
     # via -r dev.in
+#planning-poker==1.0.3
+    # via -r dev.in
 platformdirs==3.9.1
     # via pylint
 pluggy==1.2.0
     # via pytest
 py==1.11.0
     # via pytest
-pyasn1==0.5.0
-    # via
-    #   pyasn1-modules
-    #   service-identity
-pyasn1-modules==0.3.0
-    # via service-identity
 pycodestyle==2.10.0
     # via flake8
 pycparser==2.21
     # via cffi
+pycryptodome==3.18.0
+    # via django-searchable-encrypted-fields
 pydocstyle==6.3.0
     # via -r dev.in
 pyflakes==3.0.1
@@ -136,19 +146,14 @@ pygments==2.15.1
     # via sphinx
 pylint==2.17.5
     # via -r dev.in
-pyopenssl==23.2.0
-    # via twisted
 pyproject-hooks==1.0.0
     # via build
 pytest==6.2.5
     # via
     #   -r tox.in
-    #   pytest-asyncio
     #   pytest-cov
     #   pytest-django
     #   pytest-pythonpath
-pytest-asyncio==0.15.1
-    # via -r tox.in
 pytest-cov==2.12.1
     # via -r tox.in
 pytest-django==4.5.2
@@ -162,11 +167,17 @@ pytz==2023.3
 regex==2023.6.3
     # via parsimonious
 requests==2.31.0
-    # via sphinx
-service-identity==23.1.0
-    # via twisted
-six==1.16.0
-    # via automat
+    # via
+    #   jira
+    #   requests-oauthlib
+    #   requests-toolbelt
+    #   sphinx
+requests-oauthlib==1.3.1
+    # via jira
+requests-toolbelt==1.0.0
+    # via jira
+secretstorage==3.3.3
+    # via keyring
 snowballstemmer==2.2.0
     # via
     #   pydocstyle
@@ -207,27 +218,24 @@ tomli==2.0.1
     #   pip-tools
     #   pylint
     #   pyproject-hooks
-tomlkit==0.12.1
+tomlkit==0.12.0
     # via pylint
-twisted[tls]==22.10.0
-    # via daphne
 txaio==23.1.1
     # via autobahn
 typing-extensions==4.7.1
     # via
+    #   asgiref
     #   astroid
     #   pylint
-    #   twisted
 urllib3==2.0.4
     # via requests
-wheel==0.41.0
     # via pip-tools
 wrapt==1.15.0
     # via astroid
 zipp==3.16.2
-    # via importlib-metadata
-zope-interface==6.0
-    # via twisted
+    # via
+    #   importlib-metadata
+    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

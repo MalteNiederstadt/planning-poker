@@ -8,8 +8,6 @@ import subprocess
 from os.path import dirname, join
 
 from setuptools import find_packages, setup
-from setuptools.command.sdist import sdist
-from wheel.bdist_wheel import bdist_wheel
 
 
 def read(*args, **kwargs):
@@ -40,28 +38,7 @@ class ToxTestCommand(distutils.cmd.Command):
         return subprocess.call(['tox'])
 
 
-def run_wrapper(self):
-    """
-    Wrapper around the `run` method of distutils or setuptools commands.
-
-    The method creates the Javascript bundle file before the `run` method of the superclass is run.
-    """
-    self.announce("Creating the javascript bundle file...", level=distutils.log.INFO)
-    return_code = subprocess.call(['npm', 'run', 'build'])
-    if return_code != 0:
-        msg = "Error creating the javascript bundle file. Command exited with return code {}".format(return_code)
-        self.announce(msg, level=distutils.log.ERROR)
-        raise RuntimeError(msg)
-
-    super(self.__class__, self).run()
-
-
-def command_factory(name, base_class):
-    """Factory method to create a distutils or setuptools command with a patched `run` method."""
-    return type(str(name), (base_class, object), {'run': run_wrapper})
-
-
-exec(read('planning_poker', 'version.py'))
+exec(read('planning_poker_jira', 'version.py'))
 
 classifiers = """\
 Development Status :: 5 - Production/Stable
@@ -74,7 +51,6 @@ Intended Audience :: Developers
 Intended Audience :: End Users/Desktop
 License :: OSI Approved :: BSD License
 Operating System :: OS Independent
-Programming Language :: JavaScript
 Programming Language :: Python
 Programming Language :: Python :: 3.8
 Programming Language :: Python :: 3.9
@@ -82,9 +58,9 @@ Topic :: Internet
 """
 
 install_requires = [
-    'channels>=3',
-    'Django>=3',
-    'django-channels-presence>=1',
+    'django-searchable-encrypted-fields',
+    'jira>=2.0.0',
+    'planning-poker',
 ]
 
 tests_require = [
@@ -92,7 +68,6 @@ tests_require = [
     'flake8',
     'pydocstyle',
     'pylint',
-    'pytest-asyncio',
     'pytest-django',
     'pytest-cov',
     'pytest-pythonpath',
@@ -100,26 +75,24 @@ tests_require = [
 ]
 
 setup(
-    name='planning-poker',
+    name='planning-poker-jira',
     version=__version__,  # noqa
-    description='A Django app which allows teams to perform a remote planning poker session',
+    description='A jira extension for the planning poker app',
     long_description=read('README.rst', encoding='utf-8'),
     author='Rheinwerk Webteam',
     author_email='webteam@rheinwerk-verlag.de',
     maintainer='Rheinwerk Verlag GmbH Webteam',
     maintainer_email='webteam@rheinwerk-verlag.de',
-    url='https://github.com/rheinwerk-verlag/planning-poker',
+    url='https://github.com/rheinwerk-verlag/planning-poker-jira',
     license='BSD-3-Clause',
     classifiers=[c.strip() for c in classifiers.splitlines()
                  if c.strip() and not c.startswith('#')],
-    packages=find_packages(include=['planning_poker*']),
+    packages=find_packages(include=['planning_poker_jira*']),
     include_package_data=True,
     test_suite='tests',
     install_requires=install_requires,
     tests_require=tests_require,
     cmdclass={
         'test': ToxTestCommand,
-        'sdist': command_factory('SDistCommand', sdist),
-        'bdist_wheel': command_factory('BDistWheelCommand', bdist_wheel),
     }
 )

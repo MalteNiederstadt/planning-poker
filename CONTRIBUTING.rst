@@ -1,14 +1,14 @@
-Contributing to Planning Poker
-==============================
+Contributing to Planning Poker: Jira Extension
+==============================================
 
 First of all: Thanks for your interest in this project and taking the time to contribute.
 
 Reporting bugs
 ---------------
 
-If you have found a bug, please check the project's `issue <https://github.com/rheinwerk-verlag/planning-poker/issues>`_
-page first and feel free to create a `new issue <https://github.com/rheinwerk-verlag/planning-poker/issues/new>`_, if no
-one else has reported it yet.
+If you have found a bug, please check the project's
+`issue <https://github.com/rheinwerk-verlag/planning-poker-jira/issues>`_ page first and feel free to create a
+`new issue <https://github.com/rheinwerk-verlag/planning-poker-jira/issues/new>`_, if no one else has reported it yet.
 
 When reporting a bug, it is helpful to include additional information about the problem you have encountered:
 
@@ -36,19 +36,6 @@ The code follows the `PEP8 style guide <https://www.python.org/dev/peps/pep-0008
 line length is 120 characters. You can use ``flake8`` with the configuration from the ``tox.ini`` file to check if your
 changes conform with the rest of this project's code.
 
-JavaScript and Vue
-""""""""""""""""""
-
-Follow `Google's JS style guide <https://google.github.io/styleguide/jsguide.html>`_ for the JavaScript code and
-`Vue's style guide <https://vuejs.org/v2/style-guide/>`_ for the Vue specific code. The maximum line length was also
-extended to 120 characters. There is currently no linting set up for these style guides.
-
-CSS
-"""
-
-Follow `Google's CSS style guide <https://google.github.io/styleguide/htmlcssguide.html#CSS>`_ for any styling changes
-you want to make.
-
 Creating a pull request
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -58,14 +45,15 @@ Before creating a pull request make sure to check whether:
    * Existing docstrings have to be updated
    * New code has valid and descriptive docstrings
 * Tests
-   * Existing `tests <https://github.com/rheinwerk-verlag/planning-poker/tree/development/tests>`_ have to be fixed
+   * Existing `tests <https://github.com/rheinwerk-verlag/planning-poker-jira/tree/development/tests>`_ have to be fixed
    * New code is covered by tests
    * All tests pass
 * The documentation (in particular the
-  `Sphinx documentation <https://github.com/rheinwerk-verlag/planning-poker/tree/development/docs>`_) has to be modified
+  `Sphinx documentation <https://github.com/rheinwerk-verlag/planning-poker-jira/tree/development/docs>`_) has to be
+  modified
 * You updated the translations if you added or changed translated strings ::
 
-    $ cd planning_poker
+    $ cd planning_poker_jira
     $ python ../manage.py makemessages
 
   or mentioned in the pull request that there are missing translations

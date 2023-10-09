@@ -1,12 +1,11 @@
 -r tox.in
 
-asgiref<3.4.0
-channels>=3,<4
-Django>=3.2,<4
-django-channels-presence
+Django>3.2,<4.0
+django-searchable-encrypted-fields
 flake8
 isort
 pip-tools
+planning-poker
 pydocstyle
 pylint
 Sphinx
