@@ -11,7 +11,9 @@ from collections import OrderedDict, defaultdict
 from typing import Dict, List
 from .constants import ALL_VOTING_OPTIONS, FIBONACCI_CHOICES , HOUR_CHOICES
 
-
+except ImportError:  # pragma: no cover
+    OrderedDictType = Dict
+    
 #from planning_poker.models import PokerSession, Story
 
 logger = logging.getLogger(__name__)
