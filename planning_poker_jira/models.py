@@ -7,6 +7,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from encrypted_fields import fields
 from jira import JIRA
+from collections import OrderedDict, defaultdict
+from typing import Dict, List
+from .constants import ALL_VOTING_OPTIONS, FIBONACCI_CHOICES , HOUR_CHOICES
+
 
 #from planning_poker.models import PokerSession, Story
 
