@@ -11,9 +11,13 @@ from collections import OrderedDict, defaultdict
 from typing import Dict, List
 from .constants import ALL_VOTING_OPTIONS, FIBONACCI_CHOICES , HOUR_CHOICES
 
+try:
+    # The OrderedDict was added to the typing module in Python version 3.7.
+    # Fall back to the default Dict type in order to provide backwards compatibility for Python 3.6.
+    from typing import OrderedDict as OrderedDictType
 except ImportError:  # pragma: no cover
     OrderedDictType = Dict
-    
+
 #from planning_poker.models import PokerSession, Story
 
 logger = logging.getLogger(__name__)
