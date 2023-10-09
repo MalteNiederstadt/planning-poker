@@ -6,12 +6,13 @@ import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-#load_dotenv(os.path.join(BASE_DIR, '/.env'))
+load_dotenv(os.path.join(BASE_DIR, '/.env'))
 
 
-#DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
-DEBUG = True
+DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
+#DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 #SECRET_KEY = '96a40240ed25433cb8ff8ce819bf710b'
