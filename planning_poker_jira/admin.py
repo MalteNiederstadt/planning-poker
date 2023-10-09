@@ -20,6 +20,9 @@ from .models import JiraConnection
 from .utils import get_error_text
 
 
+
+
+
 def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: QuerySet) -> Union[HttpResponse, None]:
     """Send the story points for each story in the queryset to the selected backend.
 
@@ -37,6 +40,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
             error_message = _('"{story}" could not be exported. {reason}')
             num_exported_stories = 0
             for story in queryset:
+                #print(story.ticket_number)
                 try:
                     jira_story = form.client.issue(id=story.ticket_number, fields='')
                     jira_story.update(fields={jira_connection.story_points_field: story.story_points})
@@ -50,7 +54,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         messages.ERROR
                     )
                 else:
-                    num_exported_stories += 1
+                   num_exported_stories += 1
             if num_exported_stories:
                 modeladmin.message_user(request, ngettext_lazy(
                     '%d story was successfully exported.',
@@ -67,7 +71,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                 'fields': ('jira_connection',)
             }),
             (_('Override Options'), {
-                'fields': ('username', 'password')
+                'fields': ('username', 'pat')
             }),
         ),
         {},
@@ -103,10 +107,10 @@ class JiraConnectionAdmin(ModelAdmin):
 
     def get_fields(self, request: HttpRequest, obj: JiraConnection = None) -> Iterable[Union[str, Iterable[str]]]:
         if obj:
-            fields = ('label', 'api_url', 'username', ('password', 'delete_password'), 'story_points_field',
+            fields = ('label', 'api_url',  ('pat', 'delete_pat'), 'story_points_field',
                       'test_connection')
         else:
-            fields = ('label', 'api_url', 'username', 'password', 'story_points_field', 'test_connection')
+            fields = ('label', 'api_url', 'pat', 'story_points_field', 'test_connection')
         return fields
 
     def get_import_stories_url(self, obj: JiraConnection) -> str:
@@ -129,18 +133,39 @@ class JiraConnectionAdmin(ModelAdmin):
         :return: A http response which either redirects back to the changelist view on success or renders a template
                  with the `ImportStoriesForm`.
         """
+
+
         obj = self.get_object(request, unquote(object_id))
 
         if obj is None:
             return self._get_obj_does_not_exist_redirect(request, self.opts, object_id)
 
+
         if request.method == 'POST':
             form = ImportStoriesForm(obj, request.POST)
             if form.is_valid():
                 try:
-                    stories = obj.create_stories(form.cleaned_data['jql_query'],
-                                                 form.cleaned_data['poker_session'],
-                                                 form.client)
+                    if form.cleaned_data['jql_query']:
+                        stories = obj.create_stories(form.cleaned_data['jql_query'],
+                                                    form.cleaned_data['poker_session'],
+                                                    form.client)
+                    else:
+                        epics_list = form.cleaned_data['epic_choices']
+                        epics = "({})".format(', '.join('"{}"'.format(epic) for epic in epics_list if epic != 'ohne Epic'))
+
+                        issue_type_list = form.cleaned_data['issue_types']
+                        issue_types = "({})".format(', '.join('"{}"'.format(issue) for issue in issue_type_list))
+
+                        created_after = '"'+str(form.cleaned_data['created_after'])+'"'
+                        if "ohne Epic" in form.cleaned_data['epic_choices']:
+                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status!=Done AND createdDate >= {created_after}  AND (Epos-Verknüpfung IN {epics} OR Epos-Verknüpfung = EMPTY) AND issuetype IN {issue_types} ORDER BY created DESC'
+                        else:
+                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status!=Done AND createdDate >= {created_after}  AND Epos-Verknüpfung IN {epics} AND issuetype IN {issue_types} ORDER BY created DESC'
+                        print(jql_query)
+                        stories = obj.create_stories(jql_query,
+                                                    form.cleaned_data['poker_session'],
+                                                    form.client)
+
                 except (JIRAError, ConnectionError, RequestException) as e:
                     if isinstance(e, JIRAError):
                         field = 'jql_query'
@@ -161,10 +186,10 @@ class JiraConnectionAdmin(ModelAdmin):
             form,
             (
                 (None, {
-                    'fields': ('poker_session', 'jql_query')
+                    'fields': ('poker_session','epic_choices','issue_types', 'created_after', 'jql_query' )
                 }),
                 (_('Override Options'), {
-                    'fields': ('username', 'password'),
+                    'fields': ('username', 'pat'),
                 }),
             ),
             {},
@@ -179,6 +204,7 @@ class JiraConnectionAdmin(ModelAdmin):
         }
         context.update(extra_context or {})
         return TemplateResponse(request, 'admin/planning_poker_jira/jira_connection/import_stories.html', context)
+
 
 
 StoryAdmin.add_action(export_story_points, _('Export Story Points to Jira'))

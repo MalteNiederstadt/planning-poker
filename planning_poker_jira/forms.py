@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from django import forms
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from jira import JIRA, JIRAError
 from requests.exceptions import ConnectionError, RequestException
@@ -11,17 +12,22 @@ from .models import JiraConnection
 from .utils import get_error_text
 
 
+
+
 class JiraAuthenticationForm(forms.Form):
     """Base class for all the forms which handle jira connections.
     All derived forms provide a way to communicate with the jira backend through the `client` property.
     """
     #: The username used for the authentication at the API.
+    
     username = forms.CharField(label=_('Username'),
                                help_text=_('You can use this to override the username saved in the database'),
-                               required=False)
+                               required=False,
+                               disabled=True
+                               )
     #: The password used for the authentication at the API.
-    password = forms.CharField(label=_('Password'),
-                               help_text=_('You can use this to override the password in the database'),
+    pat = forms.CharField(label=_('Personal Access Token'),
+                               help_text=_('You can use this to override the Personal Access Token in the database'),
                                required=False,
                                widget=forms.PasswordInput)
 
@@ -90,8 +96,8 @@ class JiraConnectionForm(JiraAuthenticationForm, forms.ModelForm):
                                                      'authenticate against the API'),
                                          required=False)
     #: Determines whether the saved password should be deleted.
-    delete_password = forms.BooleanField(label=_('Delete Password'),
-                                         help_text=_('Check this if you want to delete your saved password'),
+    delete_pat = forms.BooleanField(label=_('Delete PAT'),
+                                         help_text=_('Check this if you want to delete your saved PAT'),
                                          required=False)
 
     class Meta:
@@ -101,7 +107,7 @@ class JiraConnectionForm(JiraAuthenticationForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].help_text = None
-        self.fields['password'].help_text = _('Use this to override the password or leave it blank to make no changes')
+        self.fields['pat'].help_text = _('Use this to override the Personal Access Token or leave it blank to make no changes')
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -109,23 +115,23 @@ class JiraConnectionForm(JiraAuthenticationForm, forms.ModelForm):
         # data from the database, the password would be reset to an empty string whenever the user wants to change any
         # attribute for an existing `JiraConnection` instance without reentering the password. The form interprets
         # an empty password field as no changes to the password to circumvent that. In order for the user to be still be
-        # able to delete a saved password, the `delete_password` field was added which indicates whether the password
+        # able to delete a saved password, the `delete_pat` field was added which indicates whether the password
         # should be deleted or not.
-        delete_password = cleaned_data.get('delete_password')
-        if delete_password and cleaned_data['password']:
-            self.add_error('password', _('You can not change the password and delete it at the same time'))
+        delete_pat = cleaned_data.get('delete_pat')
+        if delete_pat and cleaned_data['pat']:
+            self.add_error('pat', _('You can not change the password and delete it at the same time'))
             return cleaned_data
-        elif delete_password:
-            cleaned_data['password'] = ''
+        elif delete_pat:
+            cleaned_data['pat'] = ''
         else:
-            cleaned_data['password'] = cleaned_data['password'] or self.instance.password
+            cleaned_data['pat'] = cleaned_data['pat'] or self.instance.pat
 
         return super().clean()
 
     def _get_connection(self) -> JiraConnection:
         return JiraConnection(api_url=self.cleaned_data.get('api_url'),
                               username=self.cleaned_data.get('username'),
-                              password=self.cleaned_data.get('password'))
+                              pat=self.cleaned_data.get('pat'))
 
     def _requires_connection_test(self) -> bool:
         # Determine whether the connection to the jira backend should be tested. This depends on the `test_connection`
@@ -150,7 +156,7 @@ class ExportStoryPointsForm(JiraAuthenticationForm):
         connection = self.cleaned_data['jira_connection']
         return JiraConnection(api_url=connection.api_url,
                               username=self.cleaned_data['username'] or connection.username,
-                              password=self.cleaned_data['password'] or connection.password)
+                              pat=self.cleaned_data['pat'] or connection.pat)
 
 
 class ImportStoriesForm(JiraAuthenticationForm):
@@ -162,8 +168,27 @@ class ImportStoriesForm(JiraAuthenticationForm):
         queryset=PokerSession.objects.all(),
         required=False
     )
+
+
+    ISSUE_TYPES =( 
+    ("Story", "Story"), 
+    ("Bug", "Bug"), 
+    ("Task", "Task"), 
+    ) 
+    
+
+
+    
     #: The query which should be used to retrieve the stories from the Jira backend.
-    jql_query = forms.CharField(label=_('JQL Query'), required=True)
+    created_after = forms.DateField(label= _ ('Tickets seit dem'), widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    jql_query = forms.CharField(label=_('JQL Query (Overwrite)'), required=False)
+    issue_types = forms.MultipleChoiceField(choices = ISSUE_TYPES,widget=forms.CheckboxSelectMultiple) 
+    epic_choices = forms.MultipleChoiceField(
+        choices=[],  # Initially empty, we'll populate it later
+        widget=forms.CheckboxSelectMultiple,  # Use checkboxes for multiple selection
+    )
+   
+  
 
     def __init__(self, connection: JiraConnection, *args, **kwargs):
         """The `ImportStoriesForm` requires a `JiraConnection` passed from the outside in order to use it to acquire
@@ -176,7 +201,53 @@ class ImportStoriesForm(JiraAuthenticationForm):
         super().__init__(*args, **kwargs)
         self._connection = connection
 
+        try:
+            epic_choices = connection.get_epics()
+            self.fields['epic_choices'].choices = epic_choices
+            
+            default_epics = ['Digital','Data','Subscription','ohne Epic']
+            default_idx = []
+
+            # select largest epics by default
+            for idx,choice in self.fields['epic_choices'].choices:
+                if choice in default_epics:
+                    default_idx.append(idx)
+
+            self.fields['epic_choices'].initial = default_idx
+            self.fields['issue_types'].initial = ["Story","Bug","Task"]
+        except Exception as e:
+           print("Error:", e)
+
     def _get_connection(self) -> JiraConnection:
         return JiraConnection(api_url=self._connection.api_url,
                               username=self.cleaned_data['username'] or self._connection.username,
-                              password=self.cleaned_data['password'] or self._connection.password)
+                              pat=self.cleaned_data['pat'] or self._connection.pat)
+
+
+
+# #: The query which should be used to retrieve the stories from the Jira backend.
+#     created_after = forms.DateField(label= _ ('Tickets seit dem'), widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+#     jql_query = forms.CharField(label=_('JQL Query'), required=True)
+#     issue_types = forms.MultipleChoiceField(choices = ISSUE_TYPES) 
+#     epic_choices = forms.MultipleChoiceField(
+#         choices=[(1,'test')],  # Initially empty, we'll populate it later
+#         widget=forms.CheckboxSelectMultiple,  # Use checkboxes for multiple selection
+#     )
+   
+  
+
+#     def __init__(self, connection: JiraConnection, *args, **kwargs):
+#         """The `ImportStoriesForm` requires a `JiraConnection` passed from the outside in order to use it to acquire
+#         fallback data for the `_get_connection()` method.
+
+#         :param connection: The connection which will be used to acquire fallback data.
+#         :param args: Additional arguments which will be passed to the parent's constructor.
+#         :param kwargs: Additional keyword arguments which will be passed to the parent's constructor.
+#         """
+#         super().__init__(*args, **kwargs)
+#         self._connection = connection
+
+#     def _get_connection(self) -> JiraConnection:
+#         return JiraConnection(api_url=self._connection.api_url,
+#                               username=self.cleaned_data['username'] or self._connection.username,
+#                               pat=self.cleaned_data['pat'] or self._connection.pat)

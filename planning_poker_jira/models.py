@@ -17,13 +17,14 @@ class JiraConnection(models.Model):
     #: Used solely for displaying the Jira Connection to the user.
     label = models.CharField(verbose_name=_('Label'), max_length=200, blank=True)
     #: The API URL used for making requests to the Jira backend.
-    api_url = models.CharField(verbose_name=_('API URL'), max_length=200)
+    api_url = models.CharField(verbose_name=_('API URL'), default='https://sjira.funkemedien.de', max_length=200)
     #: The username used for the authentication at the API.
     username = models.CharField(verbose_name=_('API Username'), max_length=200, blank=True)
     #: The password used for the authentication at the API.
-    password = fields.EncryptedCharField(verbose_name=_('Password'), max_length=200, blank=True)
+    pat = fields.EncryptedCharField(verbose_name=_('Personal Access Token'), max_length=200, blank=True)
     #: The name of the field the Jira backend uses to store the story points.
-    story_points_field = models.CharField(verbose_name=_('Story Points Field'), max_length=200)
+    story_points_field = models.CharField(verbose_name=_('Story Points Field'), default= 'customfield_10702', max_length=200)
+    
 
     class Meta:
         verbose_name = _('Jira Connection')
@@ -34,7 +35,13 @@ class JiraConnection(models.Model):
 
     def get_client(self) -> JIRA:
         """Authenticate at the jira backend and return a client to communicate with it."""
-        return JIRA(self.api_url, basic_auth=(self.username, self.password),
+        #     return JIRA(self.api_url, basic_auth=(self.username, self.password),
+        # return JIRA(self.api_url, basic_auth=(self.username, self.password),
+        #             timeout=getattr(settings, 'JIRA_TIMEOUT', (3.05, 7)),
+        #             max_retries=getattr(settings, 'JIRA_NUM_RETRIES', 0))
+
+        return JIRA(server = self.api_url,
+                    token_auth=(self.pat),
                     timeout=getattr(settings, 'JIRA_TIMEOUT', (3.05, 7)),
                     max_retries=getattr(settings, 'JIRA_NUM_RETRIES', 0))
 
@@ -60,3 +67,20 @@ class JiraConnection(models.Model):
             _order=index
         ) for index, story in enumerate(results, start=order_start)]
         return Story.objects.bulk_create(stories)
+
+    def get_epics(self, client: Optional[JIRA] = None) -> List[Story]:
+        """Fetch issues from the Jira client with the given query string and add them to the poker session.
+
+        :param query_string: The string which should be used to query the stories.
+        :param poker_session: The poker session to which the stories should be added.
+        :param client: The jira client which should be used to import the stories. Optional.
+        :return: A list containing the created stories.
+        """
+
+        results = (client or self.get_client()).search_issues(
+            jql_str='project = "DATAAS - Data Audience and Subscription" AND issuetype = "Epos" AND updated >= startOfDay(-14d)',
+        )
+        issue_keys = [(issue.fields.customfield_10706, issue.fields.customfield_10706) for issue in results]
+        no_epic = ('ohne Epic', 'ohne Epic')
+        issue_keys.append(no_epic)
+        return tuple(issue_keys)
