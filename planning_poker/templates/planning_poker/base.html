@@ -1,0 +1,70 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'planning_poker/css/poker.css' %}">
+
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'planning_poker/favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'planning_poker/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'planning_poker/favicons/favicon-16x16.png' %}">
+    <link rel="mask-icon" href="{% static 'planning_poker/favicons/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <link rel="shortcut icon" href="{% static 'planning_poker/favicons/favicon.ico' %}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    {% block css %}{% endblock %}
+</head>
+<body>
+<div id="app">
+    {% block navbar %}
+        <navbar>
+            <template v-slot:brand>
+                <a href="{% url 'planning_poker:index' %}"><h2 class="brand">{% trans "Poker Sessions" %}</h2></a>
+                <span>{% block navtitle %}{% endblock %}</span>
+                {% block brandslot %}{% endblock %}
+            </template>
+            <template v-slot:nav>
+                {% block logged-in-as %}
+                    <span class="navbar-text pr-1">{% trans "You are logged in as" %}
+                        <span class="text-info">{{ user }}</span>
+                    </span>
+                {% endblock logged-in-as %}
+                <span class="user-function">
+                    {% block admin-link %}
+                        {% if user.is_staff %}
+                            <a class="nav-link" href="{% url 'admin:index' %}">{% trans 'Admin' %}</a>
+                        {% endif %}
+                    {% endblock admin-link %}
+                    {% block logout-link %}
+                        <a class="nav-link" href="{{ logout_url }}">{% trans 'Logout' %}</a>
+                    {% endblock logout-link %}
+                    {% block set-language %}
+                        <form action="{% url 'planning_poker:set_language' %}" method="post">{% csrf_token %}
+                            <input name="next" type="hidden" value=".">
+                            <select name="language" onchange="this.form.submit()">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                        {{ language.name_local }} ({{ language.code }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    {% endblock set-language %}
+                    {% block additional-user-functions %}{% endblock additional-user-functions %}
+                </span>
+            </template>
+        </navbar>
+    {% endblock navbar %}
+    {% block content %}{% endblock content %}
+</div>
+
+{% block js %}{% endblock %}
+{% block vue-app %}
+<script type="module" src="{% static 'planning_poker/js/header-app.js' %}"></script>
+{% endblock %}
+</body>
+</html>

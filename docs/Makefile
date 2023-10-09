@@ -1,5 +1,6 @@
 # Makefile for Sphinx documentation
 #
+export PATH := ../node_modules/.bin/:$(PATH)
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
@@ -85,17 +86,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/planning_poker_jira.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/planning_poker.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/planning_poker_jira.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/planning_poker.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/planning_poker_jira"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/planning_poker_jira"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/planning_poker"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/planning_poker"
 	@echo "# devhelp"
 
 epub:

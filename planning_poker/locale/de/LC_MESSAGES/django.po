@@ -1,0 +1,141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Poker-App 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-29 12:43+0200\n"
+"PO-Revision-Date: 2020-09-03 16:02+0200\n"
+"Last-Translator: Thomas Scheller <thomas.scheller@rheinwerk-verlag.de>\n"
+"Language-Team: Thomas Scheller thomas.scheller@rheinwerk-verlag.de\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: .\admin.py:47
+msgid "Poker Data"
+msgstr "Pokerdaten"
+
+#: .\apps.py:7
+msgid "Planning Poker"
+msgstr "Planungspoker"
+
+#: .\constants.py:18
+msgid "Too large"
+msgstr "Zu groß"
+
+#: .\constants.py:19
+msgid "No idea"
+msgstr "Keine Ahnung"
+
+#: .\models.py:18
+msgid "Poker Date"
+msgstr "Pokerdatum"
+
+#: .\models.py:19
+msgid "Name"
+msgstr "Name"
+
+#: .\models.py:23
+msgid "Active Story"
+msgstr "Aktive Story"
+
+#: .\models.py:30 .\models.py:50
+msgid "Poker Session"
+msgstr "Poker-Runde"
+
+#: .\models.py:31 .\templates\planning_poker\base.html:23
+msgid "Poker Sessions"
+msgstr "Poker-Runden"
+
+#: .\models.py:38
+msgid "Ticket Number"
+msgstr "Ticketnummer"
+
+#: .\models.py:39
+msgid "Title"
+msgstr "Titel"
+
+#: .\models.py:40
+msgid "Description"
+msgstr "Beschreibung"
+
+#: .\models.py:42
+msgid "Story Points"
+msgstr "Storypunkte"
+
+#: .\models.py:43
+msgid "The amount of points this story takes up in the sprint"
+msgstr "Die Anzahl der Punkte, die diese Story in dem Sprint einnimmt"
+
+#: .\models.py:57 .\models.py:86
+msgid "Story"
+msgstr "Story"
+
+#: .\models.py:58
+msgid "Stories"
+msgstr "Stories"
+
+#: .\models.py:92
+msgid "User"
+msgstr "Nutzer"
+
+#: .\models.py:97
+msgid "Choice"
+msgstr "Auswahl"
+
+#: .\models.py:102
+msgid "Vote"
+msgstr "Stimme"
+
+#: .\models.py:103
+msgid "Votes"
+msgstr "Stimmen"
+
+#: .\models.py:109
+#, python-brace-format
+msgid "{user} voted {choice} for story {story}"
+msgstr "{user} hat mit {choice} für {story} gestimmt"
+
+#: .\templates\admin\dropdown_filter.html:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr " Nach %(filter_title)s "
+
+#: .\templates\planning_poker\base.html:29
+msgid "You are logged in as"
+msgstr "Sie sind angemeldet als"
+
+#: .\templates\planning_poker\base.html:36
+msgid "Admin"
+msgstr "Admin"
+
+#: .\templates\planning_poker\base.html:40
+msgid "Logout"
+msgstr "Abmelden"
+
+#: .\templates\planning_poker\index.html:6
+msgid "Choose your Poker Session"
+msgstr "Wähle deine Poker-Runde"
+
+#: .\templates\planning_poker\index.html:11
+msgid "Active Sessions"
+msgstr "Aktive Runde"
+
+#: .\templates\planning_poker\index.html:18
+#, python-format
+msgid "%(unpokered_stories)s ticket left to poker"
+msgid_plural "%(unpokered_stories)s tickets left to poker"
+msgstr[0] "Noch %(unpokered_stories)s Ticket zu pokern"
+msgstr[1] "Noch %(unpokered_stories)s Tickets zu pokern"
+
+#: .\templates\planning_poker\poker_session.html:5
+#, python-format
+msgid "Poker Session: %(pokersession)s"
+msgstr "Poker-Runde: %(pokersession)s"

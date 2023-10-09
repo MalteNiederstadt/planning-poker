@@ -36,3 +36,23 @@ jobs:
         files: coverage.xml
         flags: unittests
       if: ${{ success() }}
+
+  js-tests:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+    - name: Install dependencies
+      run: npm install
+    - name: Run tests
+      run: npm run test:coverage
+    - name: Upload coverage report
+      uses: codecov/codecov-action@v2
+      with:
+        files: ./coverage/cobertura-coverage.xml
+        flags: unittests
+      if: ${{ success() }}

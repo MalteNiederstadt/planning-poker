@@ -1,7 +1,7 @@
 *.log
 
 # Development database
-planning_poker_jira.db
+planning_poker.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -85,16 +85,14 @@ target/
 *.iws
 
 # collect static output directory
-planning-poker-jira/assets/
-planning-poker-jira/static/
-
+planning_poker/static/planning_poker/js/
 .DS_Store
 
 # node
 node_modules/
 
 # bower packages
-planning-poker-jira/assets-src/vendor/
+planning-poker/assets-src/vendor/
 .sass-cache/
 
 # IDEs

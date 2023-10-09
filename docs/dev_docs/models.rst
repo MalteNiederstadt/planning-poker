@@ -1,6 +1,6 @@
 Models
 ======
 
-.. automodule:: planning_poker_jira.models
+.. automodule:: planning_poker.models
    :members:
    :exclude-members: DoesNotExist, MultipleObjectsReturned

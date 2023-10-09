@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# planning_poker_jira documentation build configuration file
+# planning_poker documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -12,8 +12,13 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
+
+# Setup Django
+import django
+from docutils import nodes
+from sphinx.transforms import SphinxTransform
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -29,8 +34,8 @@ project_root = os.path.dirname(os.getcwd())
 # and that the django settings of the source package are imported.
 sys.path.insert(0, project_root)
 
-# Setup Django
-import django
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'example.settings')
 if 'setup' in dir(django):
@@ -39,7 +44,7 @@ if 'setup' in dir(django):
 # exec version.py instead of importing it. Importing may trigger unwanted
 # side-effects (if autodoc is used, the pypackage may be imported anyway).
 meta = {}
-exec(open(os.path.join(project_root, 'planning_poker_jira', 'version.py')).read(), {}, meta)
+exec(open(os.path.join(project_root, 'planning_poker', 'version.py')).read(), {}, meta)
 
 # -- General configuration ---------------------------------------------
 
@@ -48,7 +53,14 @@ exec(open(os.path.join(project_root, 'planning_poker_jira', 'version.py')).read(
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosectionlabel', 'sphinx.ext.intersphinx', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosectionlabel', 'sphinx.ext.intersphinx', 'sphinx.ext.viewcode',
+              'sphinx_js']
+
+JS_ROOT = os.path.join(BASE_DIR, 'planning_poker', 'assets', 'js')
+
+jsdoc_config_path = os.path.join(BASE_DIR, 'docs', 'jsdoc.json')
+
+js_source_path = JS_ROOT
 
 autosectionlabel_prefix_document = True
 
@@ -69,7 +81,7 @@ source_suffix = ['.rst']
 master_doc = 'index'
 
 # General information about the project.
-project = u'Planning Poker Jira'
+project = u'Planning Poker'
 copyright = u'2021, Rheinwerk Verlag GmbH, Rheinwerk Webteam'
 
 # The version info for the project you're documenting, acts as replacement
@@ -159,7 +171,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['static']
 
 html_css_files = [
-    'css/custom.css'
+    'css/custom.css',
 ]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page
@@ -206,7 +218,7 @@ html_css_files = [
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'planning_poker_jiradoc'
+htmlhelp_basename = 'planning_pokerdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------
@@ -226,8 +238,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass
 # [howto/manual]).
 latex_documents = [
-    ('index', 'planning_poker_jira.tex',
-     u'Planning Poker Jira Documentation',
+    ('index', 'planning_poker.tex',
+     u'Planning Poker Documentation',
      u'Rheinwerk Webteam', 'manual'),
 ]
 
@@ -257,8 +269,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'planning_poker_jira',
-     u'Planning Poker Jira Documentation',
+    ('index', 'planning_poker',
+     u'Planning Poker Documentation',
      [u'Rheinwerk Webteam'], 1)
 ]
 
@@ -272,11 +284,11 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'planning_poker_jira',
-     u'Planning Poker Jira Documentation',
+    ('index', 'planning_poker',
+     u'Planning Poker Documentation',
      u'Rheinwerk Webteam',
-     'planning_poker_jira',
-     'A jira extension for the planning poker app',
+     'planning_poker',
+     'A Django app which allows teams to perform a remote planning poker session',
      'Miscellaneous'),
 ]
 
@@ -291,3 +303,24 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+
+class RepoImagePathTransform(SphinxTransform):
+    """Remove the leading GitHub repo prefix where possible from all image URIs.
+    The URIs of the images in the 'README.rst' all start with the prefix of the GitHub repo in order to show them on the
+    repository overview page and on PyPI. Since the same readme file should also be used inside the docs, the prefix
+    has to be removed from the paths when building the docs.
+    """
+    default_priority = 409
+    github_repo_prefix = 'https://raw.githubusercontent.com/rheinwerk-verlag/planning-poker/main/docs/'
+
+    def apply(self, **kwargs):
+        github_repo_prefix_length = len(self.github_repo_prefix)
+        for node in self.document.traverse(nodes.image):
+            uri = node.attributes['uri']
+            if uri.startswith(self.github_repo_prefix):
+                node.attributes['uri'] = uri[github_repo_prefix_length:]
+
+
+def setup(app):
+    app.add_transform(RepoImagePathTransform)
