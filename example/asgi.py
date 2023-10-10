@@ -9,6 +9,7 @@ from django.urls import path
 
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
+django.setup()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'example.settings')
 application = get_asgi_application()
