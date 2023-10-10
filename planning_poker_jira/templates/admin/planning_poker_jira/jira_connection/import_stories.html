@@ -23,12 +23,6 @@
 {% endblock %}
 
 {% block content %}
-  <script>
-  const jql_query = document.getElementById("id_jql_query");
-  const pat = document.getElementById("id_pat");
-  jql_query.autocomplete = "off"
-  pat.autocomplete = "off"                          
-  </script>
   <div id="content-main">
     <form method="post">{% csrf_token %}
       {% for error in form.non_field_errors %}
@@ -47,4 +41,10 @@
       </div>
     </form>
   </div>
+  <script>
+  const jql_query = document.getElementById("id_jql_query");
+  const pat = document.getElementById("id_pat");
+  jql_query.autocomplete = "off"
+  pat.autocomplete = "off"                          
+  </script>
 {% endblock %}
