@@ -28,9 +28,9 @@ application = ProtocolTypeRouter({
     # WebSocket chat handler
     "websocket": AllowedHostsOriginValidator(
         AuthMiddlewareStack(
-            URLRouter([
+            URLRouter(
 U               planning_poker.routing.websocket_urlpatterns
-            ])
+            )
         )
     ),
 })
