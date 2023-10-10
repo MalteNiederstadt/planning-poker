@@ -126,7 +126,7 @@ pip-tools==7.1.0
     # via -r dev.in
 #planning-poker==1.0.3
 #git+https://github.com/mltn123/planning-poker_stable.git
-https://github.com/MalteNiederstadt/planning-poker_stable.git
+git+https://github.com/MalteNiederstadt/planning-poker_stable.git
     # via -r dev.in
 platformdirs==3.9.1
     # via pylint
