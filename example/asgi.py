@@ -11,7 +11,7 @@ import example.routing
 
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
-#django.setup()
+django.setup()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'example.settings')
 application = ProtocolTypeRouter({
