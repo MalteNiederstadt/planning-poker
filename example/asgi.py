@@ -14,6 +14,8 @@ import example.routing
 from example.routing import websocket_urlpatterns
 
 
+
+
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
 
@@ -27,6 +29,6 @@ application = ProtocolTypeRouter({
         )
     ),
 })
-application = get_asgi_application()
+#application = get_asgi_application()
 
 
