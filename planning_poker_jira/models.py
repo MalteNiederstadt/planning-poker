@@ -8,8 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from encrypted_fields import fields
 from jira import JIRA
 
-from planning_poker.models import PokerSession, Story
-
+#from planning_poker.models import PokerSession, Story
+from .base_models import PokerSession, Story
 logger = logging.getLogger(__name__)
 
 
