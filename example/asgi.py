@@ -17,4 +17,15 @@ from django.urls import path
 
 
 #application = get_asgi_application()
-application = get_default_application()
+#application = get_default_application()
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example.settings")
+
+application = ProtocolTypeRouter({
+  "http": get_asgi_application(),
+  "websocket": AuthMiddlewareStack(
+        URLRouter(
+            chat.routing.websocket_urlpatterns
+        )
+    ),
+})
