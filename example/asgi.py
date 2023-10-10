@@ -20,13 +20,17 @@ from planning_poker.consumers import PokerConsumer
 #application = get_asgi_application()
 #application = get_default_application()
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example.settings")
-
 application = ProtocolTypeRouter({
-  "http": get_asgi_application(),
-  "websocket": AuthMiddlewareStack(
-        URLRouter(
-            example.routing.websocket_urlpatterns
+    # Django's ASGI application to handle traditional HTTP requests
+    "http": django_asgi_app,
+
+    # WebSocket chat handler
+    "websocket": AllowedHostsOriginValidator(
+        AuthMiddlewareStack(
+            URLRouter([
+                path("example/admin/", PokerConsumer.as_asgi()),
+                path("example/", PokerConsumer.as_asgi()),
+            ])
         )
     ),
 })
