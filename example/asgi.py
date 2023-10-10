@@ -13,6 +13,7 @@ from django.urls import path
 import example.routing
 django_asgi_app = get_asgi_application()
 from planning_poker.consumers import PokerConsumer
+import planning_poker.routing
 
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
