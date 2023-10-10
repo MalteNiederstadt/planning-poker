@@ -18,7 +18,8 @@ from planning_poker.admin import StoryAdmin
 from .forms import ExportStoryPointsForm, ImportStoriesForm, JiraConnectionForm
 from .models import JiraConnection
 from .utils import get_error_text
-
+import requests
+import json
 
 
 
@@ -43,7 +44,11 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                 #print(story.ticket_number)
                 try:
                     jira_story = form.client.issue(id=story.ticket_number, fields='')
-                    jira_story.update(fields={jira_connection.story_points_field: story.story_points})
+                    if jira_story.issue_type_by_name == 'Story':      
+                        jira_story.update(fields={jira_connection.story_points_field: story.story_points})
+                    else:
+                        print(jira_connection.api_url)
+
                 except (JIRAError, ConnectionError, RequestException) as e:
                     modeladmin.message_user(
                         request,
@@ -158,9 +163,9 @@ class JiraConnectionAdmin(ModelAdmin):
 
                         created_after = '"'+str(form.cleaned_data['created_after'])+'"'
                         if "ohne Epic" in form.cleaned_data['epic_choices']:
-                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status!=Done AND createdDate >= {created_after}  AND (Epos-Verknüpfung IN {epics} OR Epos-Verknüpfung = EMPTY) AND issuetype IN {issue_types} ORDER BY created DESC'
+                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status not in (Closed , resolved, Done) AND createdDate >= {created_after}  AND (Epos-Verknüpfung IN {epics} OR Epos-Verknüpfung = EMPTY) AND issuetype IN {issue_types} ORDER BY created DESC'
                         else:
-                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status!=Done AND createdDate >= {created_after}  AND Epos-Verknüpfung IN {epics} AND issuetype IN {issue_types} ORDER BY created DESC'
+                            jql_query = f'project = "DATAAS - Data Audience AND Subscription" AND cf[10702] is empty AND status not in (Closed , resolved, Done) AND createdDate >= {created_after}  AND Epos-Verknüpfung IN {epics} AND issuetype IN {issue_types} ORDER BY created DESC'
                         print(jql_query)
                         stories = obj.create_stories(jql_query,
                                                     form.cleaned_data['poker_session'],

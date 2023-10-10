@@ -174,6 +174,7 @@ class ImportStoriesForm(JiraAuthenticationForm):
     ("Story", "Story"), 
     ("Bug", "Bug"), 
     ("Task", "Task"), 
+    ("Ad hoc","Ad hoc")
     ) 
     
 
