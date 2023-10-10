@@ -124,8 +124,8 @@ parsimonious==0.10.0
     # via sphinx-js
 pip-tools==7.1.0
     # via -r dev.in
-#planning-poker==1.0.3
-git+https://github.com/mltn123/planning-poker_stable.git
+planning-poker==1.0.3
+#git+https://github.com/mltn123/planning-poker_stable.git
     # via -r dev.in
 platformdirs==3.9.1
     # via pylint
