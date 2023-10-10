@@ -16,5 +16,5 @@ from django.urls import path
 # is populated before importing code that may import ORM models.
 
 
-#application = get_asgi_application()
-application = get_default_application()
+application = get_asgi_application()
+#application = get_default_application()
