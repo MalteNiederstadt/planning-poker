@@ -39,6 +39,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
+    #channels_presence',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.humanize',
@@ -48,7 +49,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'channels',
-    'channels_presence',
     'planning_poker.apps.ChannelsPresenceConfig',
     'planning_poker',
     'encrypted_fields',
