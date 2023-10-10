@@ -11,6 +11,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.urls import path
 import example.routing
+django_asgi_app = get_asgi_application()
 from planning_poker.consumers import PokerConsumer
 
 # Initialize Django ASGI application early to ensure the AppRegistry
