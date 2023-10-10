@@ -44,7 +44,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                 #print(story.ticket_number)
                 try:
                     jira_story = form.client.issue(id=story.ticket_number, fields='')
-                    if jira_story.issue_type_by_name == 'Story':      
+                    if jira_story.get_field('issuetype') == 'Story':      
                         jira_story.update(fields={jira_connection.story_points_field: story.story_points})
                     else:
                         print(jira_connection.api_url)
