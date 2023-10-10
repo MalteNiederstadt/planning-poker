@@ -4,7 +4,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'example.settings')
 import django
 django.setup()
 
-from django.core.asgi import get_asgi_application
+#from django.core.asgi import get_asgi_application
 from channels.routing import get_default_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -16,5 +16,5 @@ from django.urls import path
 # is populated before importing code that may import ORM models.
 
 
-application = get_asgi_application()
-#application = get_default_application()
+#application = get_asgi_application()
+application = get_default_application()
