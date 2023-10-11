@@ -55,6 +55,8 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         "Content-Type": "application/json",
                         "Authorization": "Bearer {JiraConnection.pat}"
                         }
+                        logger.info(JiraConnection.pat)
+                        logger.info(headers)
 
                         query_params = {
                         'boardId': 945
