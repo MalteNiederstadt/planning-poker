@@ -42,14 +42,13 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
             error_message = _('"{story}" could not be exported. {reason}')
             num_exported_stories = 0
             for story in queryset:
-                sys.stdout.write(str(vars(story)))
                 try:
                     jira_story = form.client.issue(id=story.ticket_number, fields='')
                     if jira_story.get_field('issuetype') == 'Story':      
                         jira_story.update(fields={jira_connection.story_points_field: story.story_points})
                     else:
                         #print(jira_connection.api_url)
-                        sys.stdout.write('test')
+                        modeladmin.message_user()
                         url = "https://sjira.funkemedien.de/rest/agile/1.0/issue/{jira_story.ticket_number}/estimation"
                         headers = {
                         "Accept": "application/json",
@@ -74,7 +73,8 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         request,
                         error_message.format(
                             story=story,
-                            reason=get_error_text(e, api_url=jira_connection.api_url, connection=jira_connection)
+                            #reason=get_error_text(e, api_url=jira_connection.api_url, connection=jira_connection)
+                            reason = str(vars(story))
                         ),
                         messages.ERROR
                     )
