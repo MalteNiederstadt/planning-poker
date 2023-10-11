@@ -20,6 +20,7 @@ from .models import JiraConnection
 from .utils import get_error_text
 import requests
 import json
+import sys
 
 
 
@@ -47,7 +48,8 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                     if jira_story.get_field('issuetype') == 'Story':      
                         jira_story.update(fields={jira_connection.story_points_field: story.story_points})
                     else:
-                        print(jira_connection.api_url)
+                        #print(jira_connection.api_url)
+                        sys.stdout.write(jira_connection.api_url)
 
                 except (JIRAError, ConnectionError, RequestException) as e:
                     modeladmin.message_user(
