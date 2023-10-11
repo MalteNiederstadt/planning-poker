@@ -21,9 +21,9 @@ from .utils import get_error_text
 import requests
 import json
 import sys
-import logging
+#import logging
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: QuerySet) -> Union[HttpResponse, None]:
@@ -65,14 +65,6 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         "value": story.story_points
                         } )
 
-                                
-                                
-                        logger.info(str(jira_connection.pat))
-                        logger.info(headers)
-                        logger.info(payload)
-                        logger.info(story.ticket_number)
-                        logger.info(f"https://sjira.funkemedien.de/rest/agile/latest/issue/{story.ticket_number}/estimation")
-
                         response = requests.request(
                         "PUT",
                         url,
@@ -80,7 +72,6 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers=headers,
                         params = query_params
                         )
-                        logger.info(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
 
                
                         

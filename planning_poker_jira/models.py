@@ -69,7 +69,7 @@ class JiraConnection(models.Model):
         return Story.objects.bulk_create(stories)
 
     def get_epics(self, client: Optional[JIRA] = None) -> List[Story]:
-        """Fetch issues from the Jira client with the given query string and add them to the poker session.
+        """Fetch epics from the Jira client with the given query string and add them to the poker session.
 
         :param query_string: The string which should be used to query the stories.
         :param poker_session: The poker session to which the stories should be added.

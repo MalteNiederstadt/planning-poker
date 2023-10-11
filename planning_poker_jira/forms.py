@@ -214,8 +214,8 @@ class ImportStoriesForm(JiraAuthenticationForm):
                 if choice in default_epics:
                     default_idx.append(idx)
 
-            self.fields['epic_choices'].initial = default_idx
-            self.fields['issue_types'].initial = ["Story","Bug","Task"]
+            self.fields['epic_choices'].initial = default_epics
+            self.fields['issue_types'].initial = ["Story","Bug","Task","Ad hoc"]
         except Exception as e:
            print("Error:", e)
 
