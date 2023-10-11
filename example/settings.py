@@ -40,6 +40,7 @@ DATABASES = {
 
 INSTALLED_APPS = (
     #channels_presence',
+    'daphne',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.humanize',

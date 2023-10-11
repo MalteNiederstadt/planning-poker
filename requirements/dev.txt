@@ -5,7 +5,7 @@
 #    pip-compile --output-file=dev.txt dev.in
 #
 
-daphne
+
 wheel==0.41.0
 whitenoise==6.2.0
 Brotli==1.0.9
@@ -34,8 +34,8 @@ certifi==2023.7.22
     # via requests
 cffi==1.15.1
     # via cryptography
-#channels==3.0.4
-channels==4.0.0
+channels==3.0.4
+#channels==4.0.0
     # via planning-poker
 charset-normalizer==3.2.0
     # via requests
