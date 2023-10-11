@@ -52,7 +52,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers = {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Authorization": JiraConnection.pat
+                        "Authorization": "Bearer {JiraConnection.pat}"
                         }
 
                         query_params = {
