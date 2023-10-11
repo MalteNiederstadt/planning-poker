@@ -63,7 +63,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         }
 
                         payload = json.dumps( {
-                        "value": story.story_points
+                        "value": int(story.story_points)
                         } )
 
                         response = requests.request(
