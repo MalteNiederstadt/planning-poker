@@ -54,10 +54,9 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers = {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Authorization": f"Bearer {jira_connection.pat}"
+                        "Authorization": f"Bearer {jira_connection.pat}"    
                         }
-                        logger.info(str(jira_connection.pat))
-                        logger.info(headers)
+     
 
                         query_params = {
                         'boardId': 945
@@ -66,6 +65,10 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         payload = json.dumps( {
                         "value": int(story.story_points)
                         } )
+                        logger.info(str(jira_connection.pat))
+                        logger.info(headers)
+                        logger.info(payload)
+                        logger.info(story)
 
                         response = requests.request(
                         "PUT",
