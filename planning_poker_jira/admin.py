@@ -42,7 +42,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
             error_message = _('"{story}" could not be exported. {reason}')
             num_exported_stories = 0
             for story in queryset:
-                sys.stdout.write(vars(story))
+                sys.stdout.write(str(vars(story)))
                 try:
                     jira_story = form.client.issue(id=story.ticket_number, fields='')
                     if jira_story.get_field('issuetype') == 'Story':      
