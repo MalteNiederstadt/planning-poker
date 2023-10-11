@@ -49,7 +49,25 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         jira_story.update(fields={jira_connection.story_points_field: story.story_points})
                     else:
                         #print(jira_connection.api_url)
-                        sys.stdout.write(jira_connection.api_url)
+                        sys.stdout.write('test')
+                        url = "https://sjira.funkemedien.de/rest/agile/1.0/issue/{jira_story.ticket_number}/estimation"
+                        headers = {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": JiraConnection.pat
+                        }
+
+                        payload = json.dumps( {
+                        "value": "8.0"
+                        } )
+
+                        response = requests.request(
+                        "PUT",
+                        url,
+                        data=payload,
+                        headers=headers
+                        )
+
 
                 except (JIRAError, ConnectionError, RequestException) as e:
                     modeladmin.message_user(
