@@ -16,7 +16,8 @@ dj-database-url==1.2.0
 python-dotenv==0.21.0
 alabaster==0.7.13
     # via sphinx
-asgiref==3.7.2
+#asgiref==3.7.2
+asgiref==3.3.4
     # via
     #   channels
     #   django
