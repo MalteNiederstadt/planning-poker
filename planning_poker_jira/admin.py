@@ -21,8 +21,9 @@ from .utils import get_error_text
 import requests
 import json
 import sys
+import logging
 
-
+logger = logging.getLogger(__name__)
 
 
 def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: QuerySet) -> Union[HttpResponse, None]:
@@ -70,6 +71,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers=headers,
                         params = query_params
                         )
+                        logger.info(response)
 
 
                 except (JIRAError, ConnectionError, RequestException) as e:
