@@ -68,7 +68,8 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         logger.info(str(jira_connection.pat))
                         logger.info(headers)
                         logger.info(payload)
-                        logger.info(story)
+                        logger.info(story.ticket_number)
+                        logger.info(f"https://sjira.funkemedien.de/rest/agile/latest/issue/{story.ticket_number}/estimation")
 
                         response = requests.request(
                         "PUT",
