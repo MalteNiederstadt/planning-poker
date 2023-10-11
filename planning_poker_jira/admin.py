@@ -49,23 +49,24 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                     if jira_story.get_field('issuetype') == 'Story':      
                         jira_story.update(fields={jira_connection.story_points_field: story.story_points})
                     else:
-                        #print(jira_connection.api_url)
-                        url = "https://sjira.funkemedien.de/rest/agile/latest/issue/{story.ticket_number}/estimation"
+
+                        url = "https://sjira.funkemedien.de/rest/agile/latest/issue/DATAAS-1648/estimation"
+
                         headers = {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": f"Bearer {jira_connection.pat}"    
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Authorization": f"Bearer {jira_connection.pat}"    
                         }
-     
-
                         query_params = {
-                        'boardId': 945
-                        }
-
+                                'boardId': 945
+                        }   
+                            
                         payload = json.dumps( {
                         "value": story.story_points
                         } )
 
+                                
+                                
                         logger.info(str(jira_connection.pat))
                         logger.info(headers)
                         logger.info(payload)
@@ -79,7 +80,11 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers=headers,
                         params = query_params
                         )
-                        logger.info(response)
+                        logger.info(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
+
+               
+                        
+                       
 
 
                 except (JIRAError, ConnectionError, RequestException) as e:
