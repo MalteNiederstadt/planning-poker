@@ -40,6 +40,7 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
         form = ExportStoryPointsForm(request.POST)
         if form.is_valid():
             jira_connection = form.cleaned_data['jira_connection']
+            logger.info(jira_connection)
             error_message = _('"{story}" could not be exported. {reason}')
             num_exported_stories = 0
             for story in queryset:
@@ -53,9 +54,9 @@ def export_story_points(modeladmin: ModelAdmin, request: HttpRequest, queryset: 
                         headers = {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer {JiraConnection.pat}"
+                        "Authorization": "Bearer {jira_connection.pat}"
                         }
-                        logger.info(str(JiraConnection.pat))
+                        logger.info(str(jira_connection.pat))
                         logger.info(headers)
 
                         query_params = {
