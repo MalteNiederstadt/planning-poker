@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-import logging
+#import logging
 from typing import List, Optional
 
 from django.conf import settings
@@ -10,7 +10,7 @@ from jira import JIRA
 
 from planning_poker.models import PokerSession, Story
 #from .base_models import PokerSession, Story
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 class JiraConnection(models.Model):
