@@ -8,7 +8,7 @@ python manage.py migrate
 python manage.py migrate --run-syncdb
 #python manage.py runworker websocket
 
-# if [ $CREATE_SUPERUSER ];
-# then
- # python manage.py createsuperuser --no-input
-# fi
+if [ $CREATE_SUPERUSER ];
+then
+ python manage.py createsuperuser --no-input
+fi
