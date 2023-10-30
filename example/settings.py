@@ -23,20 +23,20 @@ TEMPLATE_DIRS = (
 
 ASGI_APPLICATION = 'example.asgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER':  os.environ.get('DATABASE_USERNAME'),
-        'PASSWORD':  os.environ.get('DATABASE_PASSWORD'),
-        'HOST':  os.environ.get('DATABASE_HOST'),
-        'PORT':  os.environ.get('DATABASE_PORT'),
-    }
-}
-
 # DATABASES = {
-#     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.environ.get('DATABASE_NAME'),
+#         'USER':  os.environ.get('DATABASE_USERNAME'),
+#         'PASSWORD':  os.environ.get('DATABASE_PASSWORD'),
+#         'HOST':  os.environ.get('DATABASE_HOST'),
+#         'PORT':  os.environ.get('DATABASE_PORT'),
+#     }
 # }
+
+DATABASES = {
+    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
+}
 
 INSTALLED_APPS = (
     #channels_presence',
